@@ -1,4 +1,4 @@
-package ex1;
+package guide1.ex1;
 
 import java.net.*;
 import java.io.*;

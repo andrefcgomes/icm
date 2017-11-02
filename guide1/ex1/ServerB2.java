@@ -1,10 +1,18 @@
-package ex1;
+package guide1.ex1;
 
 import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.io.*;
-
+/*
+ * Apesar do comportamento utilizando um ExecutorService ser muito semelhante ao uso normal de Threads, este primeiro
+ * permite um controlo muito melhor do lifecycle das threads, facilitando tarefas administrativas como saber a quantidade
+ * actual de ligações ou até mesmo as limitar. Claro que estas tarefas são facilmente feitas manualmente com Threads recorrendo
+ * a variáveis auxiliares, mas ter uma estrutura já definida permite um sistema muito mais robusto.
+ * Este ExecutorService também permite a utilização de Callable em vez do tradicional Runnable, que se comportam da mesma forma,
+ * com a diferença do Callable poder passar informação ao ExecutorService que o instanciou, permitindo parar o servidor sem
+ * matar o processo manualmente, como demonstrado no exercicio seguinte, na class ServerC
+ */
 public class ServerB2 {
 	Socket socket;
 	BufferedReader in;
