@@ -27,6 +27,7 @@ public class ParkingApplicationClient extends JFrame {
 	/**
 	 * Launch the application.
 	 * Não esquecer de correr o rmiregistry na pasta build
+	 * Um cliente nao consegue enviar objectos para o servidor que ele nao tenha conhecimento, dado que dependem todos da mesma interface
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
