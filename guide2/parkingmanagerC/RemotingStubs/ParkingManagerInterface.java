@@ -1,4 +1,4 @@
-package guide2.parkingmanager.RemotingStubs;
+package guide2.parkingmanagerC.RemotingStubs;
 
 public interface ParkingManagerInterface {
 	

@@ -1,8 +1,9 @@
-package guide2.parkingmanager.RemotingStubs;
+package guide2.parkingmanagerC.RemotingStubs;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -12,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import guide2.parkingmanager.ParkingManagerClass.ParkingManager;
+import guide2.parkingmanagerC.ParkingManagerClass.ParkingManager;
 
 public class ServerStub implements Runnable {
 	ParkingManager park = null;
@@ -28,9 +29,6 @@ public class ServerStub implements Runnable {
 
 	public void run() {
 
-		// Executor executor = Executors.newFixedThreadPool( 2 ) ; //Create thread pool
-
-		// Executor executor = Executors.newCachedThreadPool();
 		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			servSock = new ServerSocket(srvPort);
@@ -51,12 +49,11 @@ public class ServerStub implements Runnable {
 				if (submit != null && submit.isDone()) {
 					try {
 						System.out.println(submit.get());
-						if(submit.get() == -1) {
+						if (submit.get() == -1) {
 							System.out.println("done");
 							executor.shutdown();
 							break;
-						}
-						else{
+						} else {
 							System.out.println("notdone");
 							continue;
 						}
@@ -70,9 +67,8 @@ public class ServerStub implements Runnable {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+
 				}
-		
 
 			}
 			// NOTE: Is the ParkingManagerClass thread safe?!
@@ -112,38 +108,30 @@ public class ServerStub implements Runnable {
 		public Integer call() {
 			boolean stop = false;
 			try {
+				boolean result = false;
+
+				// Decode the request
 				try {
-					boolean result = false;
+					String methodName = ois.readUTF();
+					Class<?>[] parameterTypes = (Class<?>[]) ois.readObject();
+					Object[] arg = (Object[]) ois.readObject();
+					Method srvMethod = park.getClass().getDeclaredMethod(methodName, parameterTypes);
+					// Execute the request
+					if(methodName.equals("stop")) stop = true;
+					result = (boolean) srvMethod.invoke(park, arg);
 
-					String method = (String) ois.readObject();
-					String arg = (String) ois.readObject();
-					// Decode the request
-					try {
-						if (method.equals("enterPark")) {
-							result = park.enterPark(arg);
-						} else if (method.equals("leavePark"))
-							result = park.leavePark(arg);
-						else if (method.equals("isInPark"))
-							result = park.isInPark(arg);
-						else if (method.equals("stop")) {
-							stop = park.stop();
-							result = park.stop();
-						}
-					} catch (Exception e) { // Catch Any raised exception
-						expt = e; // Save it to send back to client
-					}
 
-					if (expt == null) {
-						oos.writeObject(new Boolean(result)); // Send back normal results
-					} else {
-						oos.writeObject(expt); // Send back exception caught
-					}
-
-					oos.flush();
-
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+				} catch (Exception e) { // Catch Any raised exception
+					expt = e; // Save it to send back to client
 				}
+
+				if (expt == null) {
+					oos.writeObject(result); // Send back normal results
+				} else {
+					oos.writeObject(expt); // Send back exception caught
+				}
+
+				oos.flush();
 			} catch (IOException e) {
 				e.printStackTrace(); // Not much more to do ...
 			} finally {

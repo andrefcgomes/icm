@@ -1,4 +1,4 @@
-package guide2.parkingmanager.ParkingManagerClass;
+package guide2.parkingmanagerC.ParkingManagerClass;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +37,7 @@ public class ParkingManager {
 			throw new Exception("Hello my exception test!");
 		} // Lanca excepcao quando "exception"
 		if ("div".equals(carId)) {
+			@SuppressWarnings("unused")
 			int X = 5 / 0;
 		} // Lanca excepcao quando "div"
 

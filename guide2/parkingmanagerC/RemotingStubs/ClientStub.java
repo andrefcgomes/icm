@@ -1,4 +1,4 @@
-package guide2.parkingmanager.RemotingStubs;
+package guide2.parkingmanagerC.RemotingStubs;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,23 +28,22 @@ public class ClientStub implements InvocationHandler {
 		// socket
 		// And waits for the result to return back to its caller
 		// …
+		connectServer();
+		System.out.println(method.getName());
+		System.out.println(method.getParameterTypes());
 		oos.writeUTF(method.getName());
 		oos.writeObject(method.getParameterTypes());
 		oos.writeObject(args);
-		oos.flush(); //Send request to server
-		Object result = ois.readObject(); //Return reply
+		oos.flush(); // Send request to server
+		Object result = ois.readObject(); // Return reply
 		deconnectServer();
 		return result;
 	}
 
-	public static Object getProxy(Class servInterface, String host, int port) {
+	public static <T> Object getProxy(Class<T> servInterface, String host, int port) {
 		Object proxy = Proxy.newProxyInstance(servInterface.getClassLoader(), new Class[] { servInterface },
 				new ClientStub(host, port));
 		return proxy;
-	}
-
-	public void Destroy() {
-		deconnectServer();
 	}
 
 	// Starts a connection
@@ -82,109 +81,4 @@ public class ClientStub implements InvocationHandler {
 		}
 	}
 
-	// Interface ParkingManagerInterface Methods
-
-	@Override
-	public boolean enterPark(String carId) throws Exception {
-		Object resultObj = null;
-		boolean result = false;
-
-		if (connectServer()) {
-			try {
-				oos.writeObject("enterPark");
-				oos.writeObject(carId);
-				oos.flush(); // Send request to server
-				resultObj = ois.readObject(); // Get result
-				deconnectServer();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			// Now analyse the result
-
-			if (resultObj instanceof Exception) {
-				throw (Exception) resultObj;
-			} else
-				result = (Boolean) resultObj;
-
-		}
-		return result;
-	}
-
-	@Override
-	public boolean leavePark(String carId) throws Exception {
-		Object resultObj = null;
-		boolean result = false;
-
-		if (connectServer()) {
-			try {
-				oos.writeObject("leavePark");
-				oos.writeObject(carId);
-				oos.flush(); // Send request to server
-				resultObj = ois.readObject(); // Get result
-				deconnectServer();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			// Now analyse the result
-
-			if (resultObj instanceof Exception) {
-				throw (Exception) resultObj;
-			} else
-				result = (Boolean) resultObj;
-
-		}
-		return result;
-	}
-
-	@Override
-	public boolean isInPark(String carId) throws Exception {
-		Object resultObj = null;
-		boolean result = false;
-
-		if (connectServer()) {
-			try {
-				oos.writeObject("isInPark");
-				oos.writeObject(carId);
-				oos.flush(); // Send request to server
-				resultObj = ois.readObject(); // Get result
-				deconnectServer();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			// Now analyse the result
-
-			if (resultObj instanceof Exception) {
-				throw (Exception) resultObj;
-			} else
-				result = (Boolean) resultObj;
-
-		}
-		return result;
-	}
-
-	@Override
-	public boolean stop() throws Exception {
-		Object resultObj = null;
-		boolean result = false;
-
-		if (connectServer()) {
-			try {
-				oos.writeObject("stop");
-				oos.writeObject("stop");
-				oos.flush(); // Send request to server
-				resultObj = ois.readObject(); // Get result
-				deconnectServer();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			// Now analyse the result
-
-			if (resultObj instanceof Exception) {
-				throw (Exception) resultObj;
-			} else
-				result = (Boolean) resultObj;
-
-		}
-		return result;
-	}
 }

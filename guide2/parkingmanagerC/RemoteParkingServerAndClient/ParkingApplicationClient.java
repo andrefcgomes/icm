@@ -1,15 +1,14 @@
-package guide2.parkingmanager.RemoteParkingServerAndClient;
+package guide2.parkingmanagerC.RemoteParkingServerAndClient;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import guide2.parkingmanager.RemotingStubs.ClientStub;
-import guide2.parkingmanager.RemotingStubs.ParkingManagerInterface;
+import guide2.parkingmanagerC.RemotingStubs.ClientStub;
+import guide2.parkingmanagerC.RemotingStubs.ParkingManagerInterface;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -48,9 +47,8 @@ public class ParkingApplicationClient extends JFrame {
 	public ParkingApplicationClient() {
 		
 		//Create the parking manager class
-//		manager =  new ClientStub ( "localhost", 5000);  //<<<<==== Only this line was changed>
-		manager = (ParkingManagerInterface)ClientStub.getProxy(ParkingManagerInterface.class, "localhost", 5000);
 
+		manager = (ParkingManagerInterface)ClientStub.getProxy(ParkingManagerInterface.class, "localhost", 5000);
 		//Create GUI
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 160);
